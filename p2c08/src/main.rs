@@ -150,3 +150,57 @@ pub fn max_by_second_char_series(digits: &str, len: usize) -> usize {
 fn max_by_series_test() {
     assert_eq!(max_by_second_char_series("92017", 2), 17usize);
 }
+
+// Soma de multiplos
+pub fn sum_of_multiples(limite: u32, fatores: &[u32]) -> u32 {
+    (1..limite)
+        .filter(|numero| fatores.iter().filter(|x| **x > 0).any(|x| numero % x == 0))
+        .sum()
+}
+
+#[test]
+fn some_pairs_of_factors_relatively_prime_and_some_not() {
+    assert_eq!(4419, sum_of_multiples(150, &[5, 6, 8]))
+}
+
+#[test]
+fn one_factor_is_a_multiple_of_another() {
+    assert_eq!(275, sum_of_multiples(51, &[5, 25]))
+}
+
+// Luhn
+pub fn is_valid(code: &str) -> bool {
+    if code.trim().len() <= 1 {
+        return false;
+    }
+
+    code
+        .replace(" ", "")
+        .chars()
+        .rev()
+        .map(|ch| ch.to_digit(10))
+        .enumerate()
+        .try_fold(0u32, |acc, (i, n)| 
+            match (i % 2, n) {
+                (0, Some(v)) => Some(acc + v),
+                (1, Some(v)) if v == 9 => Some(acc + v),
+                (1, Some(v)) => Some(acc + ((v * 2) % 9)),
+                _ => None
+            })
+        .map_or(false, |v| v % 10 == 0)
+}
+
+#[test]
+fn test_invalid_credit_card() {
+    assert_eq!(is_valid("8273 1232 7352 0569"), false);
+}
+
+#[test]
+fn test_valid_number_with_an_even_number_of_digits() {
+    assert_eq!(is_valid("095 245 88"), true);
+}
+
+#[test]
+fn strings_that_contain_non_digits_are_invalid() {
+    assert_eq!(is_valid("055a 444 285"), false);
+}
