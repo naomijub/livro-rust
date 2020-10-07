@@ -1,8 +1,8 @@
-use crate::actors::{SyncActor};
+use crate::actors::SyncActor;
 use actix::prelude::*;
 use serde_derive::Deserialize;
 
-#[derive(Clone)] 
+#[derive(Clone)]
 pub struct CEP(pub String);
 
 impl Message for CEP {
@@ -20,4 +20,9 @@ impl Handler<CEP> for SyncActor {
         let city: Local = resp.json().unwrap();
         Ok(city.localidade)
     }
+}
+
+#[derive(Deserialize)]
+pub struct Local {
+    localidade: String,
 }

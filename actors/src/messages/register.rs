@@ -1,18 +1,31 @@
 use crate::actors::SyncActor;
 use actix::{Handler, Message};
 use edn_derive::Serialize;
+use edn_rs::{Deserialize, EdnError};
 use transistor::client::Crux;
 use transistor::types::Action;
 use transistor::types::CruxId;
 
 #[allow(non_snake_case)]
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct Register {
     crux__db___id: CruxId,
     name: String,
     alias: String,
     postal_code: String,
     city: String,
+}
+
+impl Deserialize for Register {
+    fn deserialize(edn: &edn_rs::Edn) -> Result<Self, EdnError> {
+        Ok(Self {
+            crux__db___id: edn_rs::from_edn(&edn[":crux.db/id"])?,
+            name: edn_rs::from_edn(&edn[":name"])?,
+            alias: edn_rs::from_edn(&edn[":alias"])?,
+            city: edn_rs::from_edn(&edn[":city"])?,
+            postal_code: edn_rs::from_edn(&edn[":postal-code"])?,
+        })
+    }
 }
 
 impl Register {
