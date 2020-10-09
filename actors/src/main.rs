@@ -17,7 +17,7 @@ async fn main() {
 
     let city = addr_sync.send(CEP(cpf.to_string())).await.unwrap().unwrap();
 
-    let register = addr_sync
+    let _ = addr_sync
         .send(Register::new("julia", alias, cpf, &city))
         .await
         .unwrap();
