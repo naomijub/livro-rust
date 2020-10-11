@@ -2,9 +2,11 @@ use actix::prelude::*;
 
 mod actors;
 mod messages;
+mod io;
 
 use actors::{AsyncActor, SyncActor};
 use messages::cep::CEP;
+use messages::code_info::CodeInfo;
 use messages::entity::Entity;
 use messages::register::Register;
 
@@ -24,6 +26,17 @@ async fn main() {
 
     let entity = addr_async.send(Entity(alias.to_string())).await.unwrap();
 
-    println!("{:?}", entity);
+    let amount = 45.59;
+    let message = "Hello World";
+
+    let brcode = addr_async.send(CodeInfo{
+            amount: Some(amount),
+            message: Some(message.to_string()), 
+            register: entity.unwrap()
+        })
+        .await.unwrap();
+
+    io::generate_qrcode(brcode.unwrap()).await;
+
     System::current().stop();
 }

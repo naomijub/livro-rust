@@ -10,10 +10,10 @@ use transistor::types::CruxId;
 #[derive(Serialize, Debug)]
 pub struct Register {
     crux__db___id: CruxId,
-    name: String,
-    alias: String,
-    postal_code: String,
-    city: String,
+    pub name: String,
+    pub alias: String,
+    pub postal_code: String,
+    pub city: String,
 }
 
 impl Deserialize for Register {
